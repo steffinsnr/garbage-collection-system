@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collector Dashboard - EcoCollect</title>
+    <link rel="stylesheet" href="app.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <nav class="navbar" aria-label="Collector navigation">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-truck"></i>
+          <span>Collector Portal</span>
+        </div>
+        <ul class="nav-menu" id="nav-menu">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              href="#dashboard"
+              class="nav-link active"
+              onclick="
+                showDashboardSection();
+                return false;
+              "
+              >Dashboard</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              href="#requests"
+              class="nav-link"
+              onclick="
+                scrollToSection('requests');
+                return false;
+              "
+              >My Requests</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              href="#schedule"
+              class="nav-link"
+              onclick="
+                scrollToSection('schedule');
+                return false;
+              "
+              >Schedule</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              href="#profile"
+              class="nav-link"
+              onclick="
+                scrollToSection('profile');
+                return false;
+              "
+              >Profile</a
+            >
+          </li>
+        </ul>
+        <button type="button" class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+
+    <main id="main-content">
+    <section id="loginSection" class="section" aria-labelledby="collector-login-heading">
+      <div class="container">
+        <div class="login-container">
+          <h2 id="collector-login-heading"><i class="fas fa-sign-in-alt" aria-hidden="true"></i> Collector Login</h2>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="collectorId"
+                ><i class="fas fa-id-card"></i> Collector ID</label
+              >
+              <input
+                type="text"
+                id="collectorId"
+                placeholder="Enter your Collector ID"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password"><i class="fas fa-lock"></i> Password</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+          </form>
+          <div id="loginMessage" class="message" role="alert" aria-live="assertive"></div>
+
+          <div id="collectorCredentials" class="demo-credentials" hidden aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboardSection" class="section" style="display: none">
+      <div class="container">
+        <div class="dashboard-header">
+          <h2><i class="fas fa-tachometer-alt"></i> Collector Dashboard</h2>
+          <div class="collector-info">
+            <span id="collectorName">Welcome, Collector</span>
+            <button onclick="logout()" class="btn-secondary">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="totalAssigned">0</h3>
+              <p>Total Assigned</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="pendingTasks">0</h3>
+              <p>Pending Tasks</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="completedToday">0</h3>
+              <p>Completed Today</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="rating">4.8</h3>
+              <p>Rating</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+          <div class="action-buttons">
+            <button onclick="startRoute()" class="btn-primary">
+              <i class="fas fa-route"></i> Start Route
+            </button>
+            <button onclick="reportIssue()" class="btn-secondary">
+              <i class="fas fa-exclamation-triangle"></i> Report Issue
+            </button>
+            <button onclick="updateLocation()" class="btn-secondary">
+              <i class="fas fa-map-marker-alt"></i> Update Location
+            </button>
+          </div>
+        </div>
+
+        <div class="assigned-requests" id="requests">
+          <h3><i class="fas fa-list"></i> Your Assigned Requests</h3>
+          <div id="assignedRequestsGrid" class="requests-grid"></div>
+        </div>
+
+        <div class="schedule-section" id="schedule">
+          <h3><i class="fas fa-calendar-alt"></i> Today's Schedule</h3>
+          <div id="todaySchedule" class="schedule-grid"></div>
+        </div>
+
+        <div class="schedule-section" id="profile">
+          <h3><i class="fas fa-user"></i> Profile</h3>
+          <div id="collectorProfile" class="requests-grid">
+            <div class="request-card" style="cursor: default">
+              <div class="request-details">
+                <p><strong>Name:</strong> <span id="profileName">--</span></p>
+                <p>
+                  <strong>Collector ID:</strong> <span id="profileId">--</span>
+                </p>
+                <p><strong>Phone:</strong> <span id="profilePhone">--</span></p>
+                <p><strong>Area:</strong> <span id="profileArea">--</span></p>
+                <p>
+                  <strong>Status:</strong>
+                  <span class="status-badge status-active">Active</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="requestModal" class="modal" style="display: none" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Request Details</h3>
+          <button type="button" class="close" onclick="closeModal()" aria-label="Close dialog">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+          <button
+            onclick="updateRequestStatus('In Progress')"
+            class="btn-primary"
+          >
+            <i class="fas fa-play"></i> Start Collection
+          </button>
+          <button
+            onclick="updateRequestStatus('Completed')"
+            class="btn-secondary"
+          >
+            <i class="fas fa-check"></i> Mark Complete
+          </button>
+          <button onclick="closeModal()" class="btn-secondary">
+            <i class="fas fa-times"></i> Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer" style="margin-top: 20px">
+      <div class="container">
+        <div class="footer-bottom" style="text-align: center; padding: 20px">
+          <p>
+            &copy; 2026 NSNR. All rights reserved. |
+            <a
+              href="#"
+              id="hintLink"
+              onclick="toggleHint(); return false;"
+              aria-expanded="false"
+              style="color: #4caf50; text-decoration: none; cursor: pointer"
+              >Hint</a
+            >
+          </p>
+        </div>
+      </div>
+    </footer>
+    </main>
+
+    <script src="utils.js"></script>
+    <script src="collector.js"></script>
+  </body>
+</html>

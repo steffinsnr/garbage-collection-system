@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Garbage Collection Management System</title>
+    <link rel="stylesheet" href="app.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <nav class="navbar" aria-label="Main navigation">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-recycle" aria-hidden="true"></i>
+          <span>NSNR</span>
+        </div>
+        <ul class="nav-menu" id="nav-menu">
+          <li class="nav-item">
+            <a href="#home" class="nav-link active">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="#request" class="nav-link">Request Collection</a>
+          </li>
+          <li class="nav-item">
+            <a href="#tracking" class="nav-link">Track Requests</a>
+          </li>
+          <li class="nav-item">
+            <a href="#schedule" class="nav-link">Schedule</a>
+          </li>
+          <li class="nav-item">
+            <a href="register.html" class="nav-link">Register</a>
+          </li>
+          <li class="nav-item">
+            <a href="collectors.html" class="nav-link">Collector Portal</a>
+          </li>
+          <li class="nav-item">
+            <a href="admin.html" class="nav-link">Admin</a>
+          </li>
+        </ul>
+        <button type="button" class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+
+    <main id="main-content">
+    <section id="home" class="hero" aria-labelledby="hero-heading">
+      <div class="hero-content">
+        <h1 id="hero-heading">Garbage Collection Management</h1>
+        <p>Efficient waste management for a cleaner tomorrow</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <i class="fas fa-users"></i>
+            <span class="stat-number" id="totalResidents">1,250</span>
+            <span class="stat-label">Active Residents</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-truck"></i>
+            <span class="stat-number" id="activeCollectors">4</span>
+            <span class="stat-label">Active Collectors</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-check-circle"></i>
+            <span class="stat-number" id="completedToday">89</span>
+            <span class="stat-label">Completed Today</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="request" class="section">
+    <div class="container">
+        <h2><i class="fas fa-plus-circle"></i> Submit Collection Request</h2>
+        <div class="form-container">
+          <form id="requestForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="residentId"><i class="fas fa-user"></i> Resident ID</label>
+                <input type="text" id="residentId" placeholder="Enter your Resident ID" required />
+              </div>
+              <div class="form-group">
+                <label for="residentName"><i class="fas fa-id-card"></i> Full Name</label>
+                <input type="text" id="residentName" placeholder="Enter your full name" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="wasteType"><i class="fas fa-trash"></i> Waste Type</label>
+                <select id="wasteType" required>
+                  <option value="">Select Waste Type</option>
+                  <option value="Biodegradable">Biodegradable (Food waste, garden waste)</option>
+                  <option value="Recyclable">Recyclable (Paper, plastic, metal)</option>
+                  <option value="Hazardous">Hazardous (Batteries, chemicals)</option>
+                  <option value="Electronic">Electronic Waste</option>
+                  <option value="Medical">Medical Waste</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="priority"><i class="fas fa-exclamation-triangle"></i> Priority</label>
+                <select id="priority">
+                  <option value="Low">Low</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="High">High</option>
+                  <option value="Urgent">Urgent</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="address"><i class="fas fa-map-marker-alt"></i> Address</label>
+                <input type="text" id="address" placeholder="Enter your full address" required />
+              </div>
+              <div class="form-group">
+                <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                <input type="tel" id="phone" placeholder="Enter your phone number" required />
+              </div>
+            </div>
+
+          <div class="form-group">
+              <label for="description"><i class="fas fa-comment"></i> Description</label>
+              <textarea id="description" placeholder="Describe the waste or any special instructions" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+              <label for="preferredDate"><i class="fas fa-calendar"></i> Preferred Collection Date</label>
+              <input type="date" id="preferredDate" min="2026-01-01" />
+            </div>
+
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-paper-plane"></i> Submit Request
+            </button>
+          </form>
+          <div id="message" class="message" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tracking" class="section">
+      <div class="container">
+        <h2><i class="fas fa-search"></i> Track Your Requests</h2>
+        <div class="tracking-container">
+          <div class="search-box">
+            <input type="text" id="trackingId" placeholder="Enter Request ID or Resident ID" />
+            <button id="trackBtn" class="btn-secondary">
+              <i class="fas fa-search"></i> Track
+            </button>
+          </div>
+          <div id="trackingResults" class="tracking-results" aria-live="polite" aria-atomic="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="schedule" class="section">
+      <div class="container">
+        <h2><i class="fas fa-calendar-alt"></i> Collection Schedule</h2>
+        <div class="schedule-container">
+          <div class="schedule-filters">
+            <select id="areaFilter">
+              <option value="">All Areas</option>
+              <option value="USIU">USIU</option>
+              <option value="Mirema">Mirema</option>
+              <option value="Roysambu">Roysambu</option>
+              <option value="Roasters">Roasters</option>
+              <option value="Lumumba Drive">Lumumba Drive</option>
+            </select>
+            <select id="typeFilter">
+              <option value="">All Types</option>
+              <option value="Biodegradable">Biodegradable</option>
+              <option value="Recyclable">Recyclable</option>
+              <option value="Hazardous">Hazardous</option>
+            </select>
+          </div>
+          <div id="scheduleGrid" class="schedule-grid"></div>
+        </div>
+      </div>
+    </section>
+
+     <footer class="footer">
+       <div class="container">
+         <div class="footer-content">
+           <div class="footer-section">
+             <h3><i class="fas fa-recycle"></i> NSNR</h3>
+             <p>Leading the way in smart waste management solutions.</p>
+           </div>
+           <div class="footer-section">
+             <h4>Quick Links</h4>
+             <ul>
+               <li><a href="#request">Submit Request</a></li>
+               <li><a href="#tracking">Track Request</a></li>
+               <li><a href="#schedule">Schedule</a></li>
+             </ul>
+          </div>
+           <div class="footer-section">
+             <h4>Contact</h4>
+             <p><i class="fas fa-envelope"></i> info@nsnr.com</p>
+        </div>
+      </div>
+         <div class="footer-bottom">
+           <p>&copy; 2026 NSNR. All rights reserved.</p>
+      </div>
+    </div>
+     </footer>
+    </main>
+
+    <script src="utils.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

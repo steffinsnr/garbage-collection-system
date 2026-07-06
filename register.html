@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tenant Registration - NSNR</title>
+    <link rel="stylesheet" href="app.css" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        min-height: 100vh;
+      }
+      .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      }
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #424242;
+      }
+      .nav-logo i {
+        margin-right: 10px;
+        color: #4caf50;
+      }
+      .nav-menu {
+        display: flex;
+        list-style: none;
+        gap: 25px;
+      }
+      .nav-link {
+        text-decoration: none;
+        color: #424242;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: #4caf50;
+      }
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+      }
+      .bar {
+        width: 22px;
+        height: 2px;
+        background: #424242;
+        margin: 3px 0;
+      }
+
+      .register-wrapper {
+        display: flex;
+        min-height: 100vh;
+        padding-top: 60px;
+      }
+      .left-panel {
+        flex: 1;
+        background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        color: white;
+        text-align: center;
+      }
+      .left-panel i {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        opacity: 0.9;
+      }
+      .left-panel h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+      }
+      .left-panel p {
+        font-size: 1rem;
+        opacity: 0.9;
+        line-height: 1.6;
+      }
+      .right-panel {
+        flex: 1.5;
+        padding: 30px 50px;
+        overflow-y: auto;
+      }
+      .form-header {
+        margin-bottom: 20px;
+      }
+      .form-header h2 {
+        font-size: 1.5rem;
+        color: #424242;
+        margin-bottom: 5px;
+      }
+      .form-header p {
+        color: #757575;
+        font-size: 0.9rem;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px 25px;
+      }
+      .form-group {
+        margin-bottom: 5px;
+      }
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #424242;
+        font-size: 0.85rem;
+      }
+      .form-group label i {
+        margin-right: 6px;
+        color: #4caf50;
+        width: 16px;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: border-color 0.3s;
+        background: #fff;
+      }
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #4caf50;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+      }
+      .btn-primary {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #4caf50;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 10px;
+        transition: all 0.3s;
+      }
+      .btn-primary:hover {
+        background: #43a047;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+      }
+      .message {
+        margin-top: 12px;
+        padding: 10px 15px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .message.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .message.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .login-link {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        color: #757575;
+      }
+      .login-link a {
+        color: #4caf50;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .footer-bottom {
+        text-align: center;
+        padding: 15px;
+        color: #757575;
+        font-size: 0.85rem;
+        margin-top: 20px;
+      }
+
+      @media (max-width: 900px) {
+        .left-panel {
+          display: none;
+        }
+        .right-panel {
+          padding: 25px;
+        }
+        .form-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .nav-menu {
+          position: fixed;
+          left: -100%;
+          top: 60px;
+          flex-direction: column;
+          background: white;
+          width: 100%;
+          text-align: center;
+          transition: 0.3s;
+          padding: 20px 0;
+          box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        }
+        .nav-menu.active {
+          left: 0;
+        }
+        .hamburger {
+          display: flex;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-recycle"></i>
+          <span>NSNR</span>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">Home</a>
+          </li>
+          <li class="nav-item">
+            <a href="index.html#request" class="nav-link">Request Collection</a>
+          </li>
+          <li class="nav-item">
+            <a href="index.html#tracking" class="nav-link">Track Requests</a>
+          </li>
+          <li class="nav-item">
+            <a href="index.html#schedule" class="nav-link">Schedule</a>
+          </li>
+          <li class="nav-item">
+            <a href="register.html" class="nav-link active">Register</a>
+          </li>
+          <li class="nav-item">
+            <a href="collectors.html" class="nav-link">Collector Portal</a>
+          </li>
+          <li class="nav-item">
+            <a href="admin.html" class="nav-link">Admin</a>
+          </li>
+        </ul>
+        <div class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="register-wrapper">
+      <div class="left-panel">
+        <i class="fas fa-user-plus"></i>
+        <h1>Welcome to NSNR</h1>
+        <p>
+          Join our community for efficient<br />garbage collection services<br />in
+          your area.
+        </p>
+      </div>
+      <div class="right-panel">
+        <div class="form-header">
+          <h2><i class="fas fa-user-plus"></i> New Tenant Registration</h2>
+          <p>
+            Fill in your details to register for garbage collection services
+          </p>
+        </div>
+
+        <form id="registrationForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="regName"><i class="fas fa-user"></i> Full Name</label>
+              <input
+                type="text"
+                id="regName"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="regPhone"
+                ><i class="fas fa-phone"></i> Phone Number</label
+              >
+              <input
+                type="tel"
+                id="regPhone"
+                placeholder="e.g. 0712345678"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="regEmail"
+                ><i class="fas fa-envelope"></i> Email (Optional)</label
+              >
+              <input
+                type="email"
+                id="regEmail"
+                placeholder="Enter your email"
+              />
+            </div>
+            <div class="form-group">
+              <label for="regIdNumber"
+                ><i class="fas fa-id-card"></i> ID Number</label
+              >
+              <input
+                type="text"
+                id="regIdNumber"
+                placeholder="Enter your ID number"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="regArea"
+                ><i class="fas fa-map-marker-alt"></i> Area / Estate</label
+              >
+              <select id="regArea" required>
+                <option value="">Select Area</option>
+                <option value="USIU">USIU</option>
+                <option value="Mirema">Mirema</option>
+                <option value="Roysambu">Roysambu</option>
+                <option value="Roasters">Roasters</option>
+                <option value="Lumumba Drive">Lumumba Drive</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="regHouseNo"
+                ><i class="fas fa-home"></i> House/Apartment No</label
+              >
+              <input
+                type="text"
+                id="regHouseNo"
+                placeholder="e.g. A12, Block B"
+                required
+              />
+            </div>
+            <div class="form-group full-width">
+              <label for="regAddress"
+                ><i class="fas fa-map"></i> Full Address</label
+              >
+              <input
+                type="text"
+                id="regAddress"
+                placeholder="Enter your full street address"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="regPassword"
+                ><i class="fas fa-lock"></i> Password</label
+              >
+              <input
+                type="password"
+                id="regPassword"
+                placeholder="Create a password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="regConfirmPassword"
+                ><i class="fas fa-lock"></i> Confirm Password</label
+              >
+              <input
+                type="password"
+                id="regConfirmPassword"
+                placeholder="Confirm password"
+                required
+              />
+            </div>
+          </div>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-user-plus"></i> Register
+          </button>
+        </form>
+
+        <div id="regMessage" class="message"></div>
+        <div class="login-link">
+          <p>
+            Already registered?
+            <a href="index.html#tracking">Track your requests here</a>
+          </p>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 NSNR. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script>
+      document
+        .getElementById("registrationForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const password = document.getElementById("regPassword").value;
+          const confirmPassword =
+            document.getElementById("regConfirmPassword").value;
+          const msgEl = document.getElementById("regMessage");
+
+          if (password !== confirmPassword) {
+            NSNR.showMessage(msgEl, "Passwords do not match!", "error");
+            return;
+          }
+          if (password.length < 8) {
+            NSNR.showMessage(msgEl, "Password must be at least 8 characters!", "error");
+            return;
+          }
+
+          const body = {
+            name: document.getElementById("regName").value.trim(),
+            phone: document.getElementById("regPhone").value.trim(),
+            email: document.getElementById("regEmail").value.trim(),
+            idNumber: document.getElementById("regIdNumber").value.trim(),
+            area: document.getElementById("regArea").value,
+            houseNo: document.getElementById("regHouseNo").value.trim(),
+            address: document.getElementById("regAddress").value.trim(),
+            password: password,
+          };
+
+          try {
+            const tenant = await NSNR.api("/api/tenants/register", {
+              method: "POST",
+              body,
+            });
+            NSNR.showMessage(
+              msgEl,
+              "Registration successful! Your Resident ID is: " + tenant.id,
+              "success",
+            );
+            NSNR.announce("Registration successful.");
+            document.getElementById("registrationForm").reset();
+            sessionStorage.setItem("lastRegisteredId", tenant.id);
+            setTimeout(() => {
+              window.location.href = "index.html#request";
+            }, 3000);
+          } catch (err) {
+            NSNR.showMessage(msgEl, err.message, "error");
+          }
+        });
+
+      const hamburger = document.querySelector(".hamburger");
+      const navMenu = document.querySelector(".nav-menu");
+      if (hamburger && navMenu) {
+        hamburger.addEventListener("click", () => {
+          const open = hamburger.classList.toggle("active");
+          navMenu.classList.toggle("active");
+          hamburger.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - NSNR</title>
+    <link rel="stylesheet" href="app.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <nav class="navbar" aria-label="Admin navigation">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <i class="fas fa-cogs"></i>
+          <span>NSNR Admin</span>
+        </div>
+        <ul class="nav-menu" id="nav-menu">
+          <li class="nav-item">
+            <a href="index.html" class="nav-link">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#dashboard" class="nav-link active" onclick="showAdminDashboard(); return false;">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="#requests" class="nav-link" onclick="scrollToAdminSection('requests'); return false;">Requests</a>
+          </li>
+          <li class="nav-item">
+            <a href="#collectors" class="nav-link" onclick="scrollToAdminSection('collectors'); return false;">Collectors</a>
+          </li>
+          <li class="nav-item">
+            <a href="#scheduleAdmin" class="nav-link" onclick="scrollToAdminSection('scheduleAdmin'); return false;">Schedule</a>
+          </li>
+        </ul>
+        <button type="button" class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+
+    <main id="main-content">
+    <section id="loginSection" class="section" aria-labelledby="admin-login-heading">
+      <div class="container">
+        <div class="login-container">
+          <h2 id="admin-login-heading"><i class="fas fa-shield-alt" aria-hidden="true"></i> Admin Login</h2>
+          <form id="adminLoginForm">
+            <div class="form-group">
+              <label for="adminUsername"><i class="fas fa-user"></i> Username</label>
+              <input type="text" id="adminUsername" placeholder="Enter admin username" required />
+            </div>
+            <div class="form-group">
+              <label for="adminPassword"><i class="fas fa-lock"></i> Password</label>
+              <input type="password" id="adminPassword" placeholder="Enter admin password" required />
+            </div>
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+          </form>
+          <div id="adminLoginMessage" class="message" role="alert" aria-live="assertive"></div>
+
+          <div id="adminCredentials" class="demo-credentials" hidden aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboardSection" class="section" style="display:none;">
+      <div class="container">
+        <div class="dashboard-header">
+          <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+          <div class="admin-info">
+            <span id="adminName">Welcome, Administrator</span>
+            <button onclick="logout()" class="btn-secondary">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+
+        <div class="overview-stats">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clipboard-list"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="totalRequests">0</h3>
+              <p>Total Requests</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="pendingRequests">0</h3>
+              <p>Pending Requests</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="completedRequests">0</h3>
+              <p>Completed Requests</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-content">
+              <h3 id="activeCollectors">0</h3>
+              <p>Active Collectors</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quick-actions" id="requests">
+          <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+          <div class="action-buttons">
+            <button onclick="assignRequests()" class="btn-primary">
+              <i class="fas fa-tasks"></i> Assign Requests
+            </button>
+            <button onclick="addCollector()" class="btn-secondary">
+              <i class="fas fa-user-plus"></i> Add Collector
+            </button>
+            <button onclick="generateReport()" class="btn-secondary">
+              <i class="fas fa-chart-bar"></i> Generate Report
+            </button>
+            <button onclick="exportData()" class="btn-secondary">
+              <i class="fas fa-download"></i> Export Data
+            </button>
+          </div>
+        </div>
+
+        <div class="recent-requests">
+          <h3><i class="fas fa-history"></i> Recent Requests</h3>
+          <div class="requests-table-container">
+            <table class="requests-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Resident</th>
+                  <th>Type</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentRequestsTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="collector-management" id="collectors">
+          <h3><i class="fas fa-users"></i> Collector Management</h3>
+          <div class="collectors-grid" id="collectorsGrid"></div>
+        </div>
+
+        <div class="recent-requests" id="scheduleAdmin">
+          <h3><i class="fas fa-calendar-alt"></i> Manage Collection Schedule</h3>
+          <form id="adminScheduleForm" onsubmit="event.preventDefault(); addScheduleAdmin();">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="scheduleDate">Date</label>
+                <input type="date" id="scheduleDate" min="2026-01-01" required />
+              </div>
+              <div class="form-group">
+                <label for="scheduleArea">Area</label>
+                <select id="scheduleArea" required>
+                  <option value="">Select Area</option>
+                  <option value="USIU">USIU</option>
+                  <option value="Mirema">Mirema</option>
+                  <option value="Roysambu">Roysambu</option>
+                  <option value="Roasters">Roasters</option>
+                  <option value="Lumumba Drive">Lumumba Drive</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="scheduleType">Waste Type</label>
+                <select id="scheduleType" required>
+                  <option value="">Select Type</option>
+                  <option value="Biodegradable">Biodegradable</option>
+                  <option value="Recyclable">Recyclable</option>
+                  <option value="Hazardous">Hazardous</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="scheduleTime">Time (EAT)</label>
+                <input type="time" id="scheduleTime" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="scheduleCollector">Assigned Collector</label>
+              <select id="scheduleCollector">
+                <option value="">Select Collector</option>
+                <option value="Jeff Amondi (C001)">Jeff Amondi (C001)</option>
+                <option value="Kevin Kiptoo (C002)">Kevin Kiptoo (C002)</option>
+                <option value="Reagan Omondi (C003)">Reagan Omondi (C003)</option>
+                <option value="David Cj (C004)">David Cj (C004)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn-primary">
+              <i class="fas fa-plus-circle"></i> Add Schedule
+            </button>
+          </form>
+
+          <div class="requests-table-container" style="margin-top: 20px;">
+            <table class="requests-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Day</th>
+                  <th>Area</th>
+                  <th>Type</th>
+                  <th>Time (EAT)</th>
+                  <th>Collector</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminScheduleTable"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="system-status">
+          <h3><i class="fas fa-server"></i> System Status</h3>
+          <div class="status-cards">
+            <div class="status-card">
+              <i class="fas fa-database"></i>
+              <h4>Local Storage</h4>
+              <span class="status-indicator online">Online</span>
+            </div>
+            <div class="status-card">
+              <i class="fas fa-mobile-alt"></i>
+              <h4>Resident Portal</h4>
+              <span class="status-indicator online">Online</span>
+            </div>
+            <div class="status-card">
+              <i class="fas fa-truck"></i>
+              <h4>Collector Portal</h4>
+              <span class="status-indicator online">Online</span>
+            </div>
+            <div class="status-card">
+              <i class="fas fa-bell"></i>
+              <h4>Notifications</h4>
+              <span class="status-indicator online">Online</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="addCollectorModal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="add-collector-title" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="add-collector-title">Add New Collector</h3>
+          <button type="button" class="close" onclick="closeAddCollectorModal()" aria-label="Close dialog">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="addCollectorForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="newCollectorName">Full Name</label>
+                <input type="text" id="newCollectorName" required />
+              </div>
+              <div class="form-group">
+                <label for="newCollectorPhone">Phone</label>
+                <input type="tel" id="newCollectorPhone" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="newCollectorArea">Assigned Area</label>
+                <select id="newCollectorArea" required>
+                  <option value="">Select Area</option>
+                  <option value="USIU">USIU</option>
+                  <option value="Mirema">Mirema</option>
+                  <option value="Roysambu">Roysambu</option>
+                  <option value="Roasters">Roasters</option>
+                  <option value="Lumumba Drive">Lumumba Drive</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="newCollectorStatus">Status</label>
+                <select id="newCollectorStatus" required>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button onclick="saveNewCollector()" class="btn-primary">
+            <i class="fas fa-save"></i> Save Collector
+          </button>
+          <button onclick="closeAddCollectorModal()" class="btn-secondary">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer" style="margin-top: 20px;">
+      <div class="container">
+        <div class="footer-bottom" style="text-align: center; padding: 20px;">
+          <p>&copy; 2026 NSNR. All rights reserved. | 
+            <a href="#" id="hintLink" onclick="toggleHint(); return false;" aria-expanded="false" style="color: #4CAF50; text-decoration: none; cursor: pointer;">Hint</a>
+          </p>
+        </div>
+      </div>
+    </footer>
+    </main>
+
+    <script src="utils.js"></script>
+    <script src="admin.js"></script>
+  </body>
+  </html>
